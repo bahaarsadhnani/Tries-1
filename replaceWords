@@ -1,0 +1,63 @@
+class Solution {
+    
+    //648. Replace Words
+    //Space complexity : O( m *n) where m is the avg charachters in each word and n is                             the number of words in the dictionary
+    //Time complexity is: O(mn+kp) k is the no. of words in the senetnce and p is the                               avg charatcrs in each word
+    
+    class TrieNode{
+        boolean isEnd;
+        TrieNode[] children;
+        
+       public TrieNode(){
+            children = new TrieNode[26];
+        }
+    }
+    
+    TrieNode root;
+    private void insert(String word){
+        
+        TrieNode curr = root;
+        for(int i =0;i<word.length();i++){
+            char ch = word.charAt(i);
+            if(curr.children[ch-'a'] == null)
+                curr.children[ch-'a']= new TrieNode();
+            curr = curr.children[ch-'a'];
+            
+        }
+        curr.isEnd = true;
+    }
+    public String replaceWords(List<String> dictionary, String sentence) {
+        
+        root = new TrieNode();
+        for(String word : dictionary){
+            insert(word);
+        }
+        
+        String[] splitArr = sentence.split("\\s+");
+         StringBuilder result = new StringBuilder();
+        TrieNode curr;
+        StringBuilder replacement ;
+        for(int i =0;i<splitArr.length;i++){
+            if(i>0)
+                result.append(' ');
+            curr = root;
+            replacement = new StringBuilder();
+            String word = splitArr[i];
+            for(int j =0;j<word.length();j++){
+                char ch = word.charAt(j);
+                
+                if(curr.children[ch-'a'] == null || curr.isEnd)
+                    break;
+                    replacement.append(ch);
+                    curr = curr.children[ch-'a'];
+            }
+            
+            if(curr.isEnd)
+                result.append(replacement);
+            else
+                result.append(word);
+        }
+        return result.toString();
+        
+    }
+}
